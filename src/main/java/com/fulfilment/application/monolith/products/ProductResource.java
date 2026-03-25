@@ -13,7 +13,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-
 import java.util.List;
 
 @Path("product")
@@ -22,8 +21,7 @@ import java.util.List;
 @Consumes("application/json")
 public class ProductResource {
 
-  @Inject
-  ProductRepository productRepository;
+  @Inject ProductRepository productRepository;
 
   @GET
   public List<Product> get() {

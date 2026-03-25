@@ -1,16 +1,15 @@
 package com.fulfilment.application.monolith.stores;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 @QuarkusTest
 class LegacyStoreManagerGatewayTest {
 
-  @Inject
-  LegacyStoreManagerGateway legacyStoreManagerGateway;
+  @Inject LegacyStoreManagerGateway legacyStoreManagerGateway;
 
   private static Store store(String name, int quantityProductsInStock) {
     Store s = new Store(name);

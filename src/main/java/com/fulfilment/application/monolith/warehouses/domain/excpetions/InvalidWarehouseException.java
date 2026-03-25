@@ -1,6 +1,5 @@
 package com.fulfilment.application.monolith.warehouses.domain.excpetions;
 
-
 import com.fulfilment.application.monolith.exceptions.BusinessException;
 
 public class InvalidWarehouseException extends BusinessException {

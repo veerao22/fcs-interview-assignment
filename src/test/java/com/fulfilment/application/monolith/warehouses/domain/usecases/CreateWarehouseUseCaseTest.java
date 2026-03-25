@@ -1,5 +1,8 @@
 package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.fulfilment.application.monolith.warehouses.domain.excpetions.*;
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
@@ -10,9 +13,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class CreateWarehouseUseCaseTest {

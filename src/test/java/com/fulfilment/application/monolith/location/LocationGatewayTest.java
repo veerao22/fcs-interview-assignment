@@ -1,5 +1,8 @@
 package com.fulfilment.application.monolith.location;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.fulfilment.application.monolith.exceptions.LocationIdentifierInvalidException;
 import com.fulfilment.application.monolith.exceptions.LocationNotFoundException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
@@ -7,31 +10,27 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @QuarkusTest
 public class LocationGatewayTest {
 
-  @Inject
-  LocationGateway locationGateway;
+  @Inject LocationGateway locationGateway;
 
   @Test
   public void testWhenResolveNonExistentLocationShouldThrowNotFoundException() {
     assertThrows(
-            LocationNotFoundException.class, () -> locationGateway.resolveByIdentifier("UNKNOWN-999"));
+        LocationNotFoundException.class, () -> locationGateway.resolveByIdentifier("UNKNOWN-999"));
   }
 
   @Test
   public void testWhenResolveNullIdentifierShouldThrowInvalidException() {
     assertThrows(
-            LocationIdentifierInvalidException.class, () -> locationGateway.resolveByIdentifier(null));
+        LocationIdentifierInvalidException.class, () -> locationGateway.resolveByIdentifier(null));
   }
 
   @Test
   public void testWhenResolveBlankIdentifierShouldThrowInvalidException() {
     assertThrows(
-            LocationIdentifierInvalidException.class, () -> locationGateway.resolveByIdentifier("  "));
+        LocationIdentifierInvalidException.class, () -> locationGateway.resolveByIdentifier("  "));
   }
 
   @Test

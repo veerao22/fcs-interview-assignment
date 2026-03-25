@@ -1,21 +1,19 @@
 package com.fulfilment.application.monolith.warehouses.adapters.database;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class WarehouseRepositoryTest {
 
-  @Inject
-  WarehouseRepository warehouseRepository;
+  @Inject WarehouseRepository warehouseRepository;
 
   @Test
   public void testGetAllReturnsSeedData() {
@@ -112,8 +110,8 @@ public class WarehouseRepositoryTest {
   public void testGetAllExcludesArchivedWarehouses() {
     List<Warehouse> before = warehouseRepository.getAll();
     assertTrue(
-            before.stream().anyMatch(w -> "MWH.001".equals(w.businessUnitCode)),
-            "MWH.001 should be in getAll() when active");
+        before.stream().anyMatch(w -> "MWH.001".equals(w.businessUnitCode)),
+        "MWH.001 should be in getAll() when active");
 
     Warehouse wh = warehouseRepository.findByBusinessUnitCode("MWH.001");
     assertNotNull(wh);
@@ -122,8 +120,8 @@ public class WarehouseRepositoryTest {
 
     List<Warehouse> after = warehouseRepository.getAll();
     assertTrue(
-            after.stream().noneMatch(w -> "MWH.001".equals(w.businessUnitCode)),
-            "Archived MWH.001 must not appear in getAll()");
+        after.stream().noneMatch(w -> "MWH.001".equals(w.businessUnitCode)),
+        "Archived MWH.001 must not appear in getAll()");
   }
 
   @Test
@@ -149,7 +147,7 @@ public class WarehouseRepositoryTest {
     warehouseRepository.update(wh);
 
     assertNull(
-            warehouseRepository.findByBusinessUnitCode("MWH.001"),
-            "findActiveByBusinessUnitCode must return null when warehouse is archived");
+        warehouseRepository.findByBusinessUnitCode("MWH.001"),
+        "findActiveByBusinessUnitCode must return null when warehouse is archived");
   }
 }

@@ -10,9 +10,8 @@ import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResol
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import com.fulfilment.application.monolith.warehouses.validators.WarehouseValidator;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.time.LocalDateTime;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class CreateWarehouseUseCase implements CreateWarehouseOperation {
@@ -24,9 +23,9 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
   private final WarehouseValidator warehouseValidator;
 
   public CreateWarehouseUseCase(
-          WarehouseStore warehouseStore,
-          LocationResolver locationResolver,
-          WarehouseValidator warehouseValidator) {
+      WarehouseStore warehouseStore,
+      LocationResolver locationResolver,
+      WarehouseValidator warehouseValidator) {
     this.warehouseStore = warehouseStore;
     this.locationResolver = locationResolver;
     this.warehouseValidator = warehouseValidator;
@@ -35,8 +34,8 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
   @Override
   public void create(Warehouse warehouse) {
     LOGGER.infov(
-            "Creating warehouse: buCode={0}, location={1}, capacity={2}, stock={3}",
-            warehouse.businessUnitCode, warehouse.location, warehouse.capacity, warehouse.stock);
+        "Creating warehouse: buCode={0}, location={1}, capacity={2}, stock={3}",
+        warehouse.businessUnitCode, warehouse.location, warehouse.capacity, warehouse.stock);
 
     warehouseValidator.validateRequiredFields(warehouse);
 
@@ -61,7 +60,7 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
     int currentTotalCapacity = warehouseStore.totalCapacityByLocation(warehouse.location);
     if (currentTotalCapacity + warehouse.capacity > location.maxCapacity) {
       throw new CapacityExceededException(
-              currentTotalCapacity + warehouse.capacity, location.maxCapacity);
+          currentTotalCapacity + warehouse.capacity, location.maxCapacity);
     }
     if (warehouse.stock > warehouse.capacity) {
       throw new CapacityExceededException(warehouse.stock, warehouse.capacity);

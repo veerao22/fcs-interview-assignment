@@ -12,13 +12,12 @@ public class StoreEventObserver {
 
   private static final Logger LOGGER = Logger.getLogger(StoreEventObserver.class.getName());
 
-  @Inject
-  LegacyStoreManagerGateway legacyStoreManagerGateway;
+  @Inject LegacyStoreManagerGateway legacyStoreManagerGateway;
 
   public void onStoreChanged(@Observes(during = TransactionPhase.AFTER_SUCCESS) StoreEvent event) {
     LOGGER.infov(
-            "Store event received after transaction commit: action={0}, store={1}",
-            event.getActionType(), event.getStore().name);
+        "Store event received after transaction commit: action={0}, store={1}",
+        event.getActionType(), event.getStore().name);
     switch (event.getActionType()) {
       case CREATED -> {
         LOGGER.infov("Propagating store creation to legacy system: {0}", event.getStore().name);

@@ -8,9 +8,8 @@ import com.fulfilment.application.monolith.warehouses.domain.ports.ReplaceWareho
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import com.fulfilment.application.monolith.warehouses.validators.WarehouseValidator;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.time.LocalDateTime;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
@@ -22,9 +21,9 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
   private final WarehouseValidator warehouseValidator;
 
   public ReplaceWarehouseUseCase(
-          WarehouseStore warehouseStore,
-          LocationResolver locationResolver,
-          WarehouseValidator warehouseValidator) {
+      WarehouseStore warehouseStore,
+      LocationResolver locationResolver,
+      WarehouseValidator warehouseValidator) {
     this.warehouseStore = warehouseStore;
     this.locationResolver = locationResolver;
     this.warehouseValidator = warehouseValidator;
@@ -33,11 +32,11 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
   @Override
   public void replace(Warehouse newWarehouse) {
     LOGGER.infov(
-            "Replacing warehouse: buCode={0}, new location={1}, capacity={2}, stock={3}",
-            newWarehouse.businessUnitCode,
-            newWarehouse.location,
-            newWarehouse.capacity,
-            newWarehouse.stock);
+        "Replacing warehouse: buCode={0}, new location={1}, capacity={2}, stock={3}",
+        newWarehouse.businessUnitCode,
+        newWarehouse.location,
+        newWarehouse.capacity,
+        newWarehouse.stock);
 
     warehouseValidator.validateRequiredFields(newWarehouse);
 
@@ -79,14 +78,14 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
     int totalCapacityAtNewLocation = warehouseStore.totalCapacityByLocation(newWarehouse.location);
     if (sameLocation) {
       int capacityAfterReplace =
-              totalCapacityAtNewLocation - current.capacity + newWarehouse.capacity;
+          totalCapacityAtNewLocation - current.capacity + newWarehouse.capacity;
       if (capacityAfterReplace > location.maxCapacity) {
         throw new CapacityExceededException(capacityAfterReplace, location.maxCapacity);
       }
     } else {
       if (totalCapacityAtNewLocation + newWarehouse.capacity > location.maxCapacity) {
         throw new CapacityExceededException(
-                totalCapacityAtNewLocation + newWarehouse.capacity, location.maxCapacity);
+            totalCapacityAtNewLocation + newWarehouse.capacity, location.maxCapacity);
       }
     }
     if (newWarehouse.stock > newWarehouse.capacity) {

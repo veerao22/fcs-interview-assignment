@@ -10,9 +10,8 @@ import com.warehouse.api.beans.Warehouse;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
-import org.jboss.logging.Logger;
-
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class WarehouseResourceImpl implements WarehouseResource {
@@ -35,8 +34,8 @@ public class WarehouseResourceImpl implements WarehouseResource {
   @Override
   public Warehouse createANewWarehouseUnit(@NotNull Warehouse data) {
     LOGGER.infov(
-            "Creating warehouse unit: buCode={0}, location={1}",
-            data.getBusinessUnitCode(), data.getLocation());
+        "Creating warehouse unit: buCode={0}, location={1}",
+        data.getBusinessUnitCode(), data.getLocation());
 
     var warehouse = toDomainModel(data);
     createWarehouseOperation.create(warehouse);
@@ -68,7 +67,7 @@ public class WarehouseResourceImpl implements WarehouseResource {
   public Warehouse replaceTheCurrentActiveWarehouse(
       String businessUnitCode, @NotNull Warehouse data) {
     LOGGER.infov(
-            "Replacing warehouse: buCode={0}, location={1}", businessUnitCode, data.getLocation());
+        "Replacing warehouse: buCode={0}, location={1}", businessUnitCode, data.getLocation());
 
     var newWarehouse = toDomainModel(data);
     newWarehouse.businessUnitCode = businessUnitCode;
@@ -90,7 +89,7 @@ public class WarehouseResourceImpl implements WarehouseResource {
   }
 
   private com.fulfilment.application.monolith.warehouses.domain.models.Warehouse toDomainModel(
-          Warehouse data) {
+      Warehouse data) {
     var warehouse = new com.fulfilment.application.monolith.warehouses.domain.models.Warehouse();
     warehouse.businessUnitCode = data.getBusinessUnitCode();
     warehouse.location = data.getLocation();

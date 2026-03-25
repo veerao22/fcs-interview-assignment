@@ -4,9 +4,8 @@ import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class WarehouseRepository implements WarehouseStore, PanacheRepository<DbWarehouse> {
@@ -88,12 +87,12 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   @Override
   public int totalCapacityByLocation(String location) {
     Long sum =
-            getEntityManager()
-                    .createQuery(
-                            "select coalesce(sum(w.capacity), 0) from DbWarehouse w where w.location = ?1 and w.archivedAt is null",
-                            Long.class)
-                    .setParameter(1, location)
-                    .getSingleResult();
+        getEntityManager()
+            .createQuery(
+                "select coalesce(sum(w.capacity), 0) from DbWarehouse w where w.location = ?1 and w.archivedAt is null",
+                Long.class)
+            .setParameter(1, location)
+            .getSingleResult();
     return sum != null ? sum.intValue() : 0;
   }
 }

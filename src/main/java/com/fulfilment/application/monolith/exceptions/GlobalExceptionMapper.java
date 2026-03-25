@@ -14,8 +14,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
 
   private static final Logger LOGGER = Logger.getLogger(GlobalExceptionMapper.class.getName());
 
-  @Inject
-  ObjectMapper objectMapper;
+  @Inject ObjectMapper objectMapper;
 
   @Override
   public Response toResponse(Exception exception) {

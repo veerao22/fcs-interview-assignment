@@ -1,5 +1,9 @@
 package com.fulfilment.application.monolith.warehouses.adapters.restapi;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.fulfilment.application.monolith.warehouses.adapters.database.WarehouseRepository;
 import com.fulfilment.application.monolith.warehouses.domain.excpetions.DuplicateBusinessUnitCodeException;
 import com.fulfilment.application.monolith.warehouses.domain.excpetions.WarehouseNotFoundException;
@@ -11,35 +15,25 @@ import com.warehouse.api.WarehouseResource;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class WarehouseResourceImplTest {
 
-  @InjectMock
-  WarehouseRepository warehouseRepository;
+  @InjectMock WarehouseRepository warehouseRepository;
 
-  @InjectMock
-  CreateWarehouseOperation createWarehouseOperation;
+  @InjectMock CreateWarehouseOperation createWarehouseOperation;
 
-  @InjectMock
-  ReplaceWarehouseOperation replaceWarehouseOperation;
+  @InjectMock ReplaceWarehouseOperation replaceWarehouseOperation;
 
-  @InjectMock
-  ArchiveWarehouseOperation archiveWarehouseOperation;
+  @InjectMock ArchiveWarehouseOperation archiveWarehouseOperation;
 
-  @Inject
-  WarehouseResource warehouseResource;
+  @Inject WarehouseResource warehouseResource;
 
   private static com.warehouse.api.beans.Warehouse apiWarehouse(
-          String buCode, String location, Integer capacity, Integer stock) {
+      String buCode, String location, Integer capacity, Integer stock) {
     var w = new com.warehouse.api.beans.Warehouse();
     w.setBusinessUnitCode(buCode);
     w.setLocation(location);
@@ -49,7 +43,7 @@ public class WarehouseResourceImplTest {
   }
 
   private static Warehouse domainWarehouse(
-          String buCode, String location, Integer capacity, Integer stock) {
+      String buCode, String location, Integer capacity, Integer stock) {
     var w = new Warehouse();
     w.businessUnitCode = buCode;
     w.location = location;
@@ -127,12 +121,12 @@ public class WarehouseResourceImplTest {
   public void createANewWarehouseUnit_whenUseCaseThrowsDuplicateBuCode_exceptionPropagates() {
     var request = apiWarehouse("MWH.001", "AMSTERDAM-001", 30, 5);
     doThrow(new DuplicateBusinessUnitCodeException("MWH.001"))
-            .when(createWarehouseOperation)
-            .create(any(Warehouse.class));
+        .when(createWarehouseOperation)
+        .create(any(Warehouse.class));
 
     assertThrows(
-            DuplicateBusinessUnitCodeException.class,
-            () -> warehouseResource.createANewWarehouseUnit(request));
+        DuplicateBusinessUnitCodeException.class,
+        () -> warehouseResource.createANewWarehouseUnit(request));
 
     verify(createWarehouseOperation).create(any(Warehouse.class));
   }
@@ -157,9 +151,7 @@ public class WarehouseResourceImplTest {
     when(warehouseRepository.getById(999L)).thenReturn(null);
 
     assertThrows(
-            WarehouseNotFoundException
-                    .class,
-            () -> warehouseResource.getAWarehouseUnitByID("999"));
+        WarehouseNotFoundException.class, () -> warehouseResource.getAWarehouseUnitByID("999"));
 
     verify(warehouseRepository).getById(999L);
   }
@@ -167,9 +159,7 @@ public class WarehouseResourceImplTest {
   @Test
   public void getAWarehouseUnitByID_throwsWhenIdIsNotNumeric() {
     assertThrows(
-            WarehouseNotFoundException
-                    .class,
-            () -> warehouseResource.getAWarehouseUnitByID("abc"));
+        WarehouseNotFoundException.class, () -> warehouseResource.getAWarehouseUnitByID("abc"));
   }
 
   @Test
@@ -188,9 +178,7 @@ public class WarehouseResourceImplTest {
     when(warehouseRepository.getById(999L)).thenReturn(null);
 
     assertThrows(
-            WarehouseNotFoundException
-                    .class,
-            () -> warehouseResource.archiveAWarehouseUnitByID("999"));
+        WarehouseNotFoundException.class, () -> warehouseResource.archiveAWarehouseUnitByID("999"));
 
     verify(warehouseRepository).getById(999L);
     verify(archiveWarehouseOperation, never()).archive(any());
