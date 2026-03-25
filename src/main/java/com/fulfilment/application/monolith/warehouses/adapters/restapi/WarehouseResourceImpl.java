@@ -67,9 +67,15 @@ public class WarehouseResourceImpl implements WarehouseResource {
   @Override
   public Warehouse replaceTheCurrentActiveWarehouse(
       String businessUnitCode, @NotNull Warehouse data) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException(
-        "Unimplemented method 'replaceTheCurrentActiveWarehouse'");
+    LOGGER.infov(
+            "Replacing warehouse: buCode={0}, location={1}", businessUnitCode, data.getLocation());
+
+    var newWarehouse = toDomainModel(data);
+    newWarehouse.businessUnitCode = businessUnitCode;
+
+    replaceWarehouseOperation.replace(newWarehouse);
+
+    return toWarehouseResponse(newWarehouse);
   }
 
   private Warehouse toWarehouseResponse(
