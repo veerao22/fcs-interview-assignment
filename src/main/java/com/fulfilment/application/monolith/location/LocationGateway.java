@@ -5,10 +5,9 @@ import com.fulfilment.application.monolith.exceptions.LocationNotFoundException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class LocationGateway implements LocationResolver {
@@ -36,13 +35,12 @@ public class LocationGateway implements LocationResolver {
       throw new LocationIdentifierInvalidException();
     }
     return locations.stream()
-            .filter(loc -> identifier.equals(loc.identification))
-            .findFirst()
-            .orElseThrow(
-                    () -> {
-                      LOGGER.warnv("Location not found: {0}", identifier);
-                      return new LocationNotFoundException(identifier);
-                    });
+        .filter(loc -> identifier.equals(loc.identification))
+        .findFirst()
+        .orElseThrow(
+            () -> {
+              LOGGER.warnv("Location not found: {0}", identifier);
+              return new LocationNotFoundException(identifier);
+            });
   }
-
 }

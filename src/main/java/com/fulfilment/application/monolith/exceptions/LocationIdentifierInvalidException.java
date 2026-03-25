@@ -1,6 +1,5 @@
 package com.fulfilment.application.monolith.exceptions;
 
-
 public class LocationIdentifierInvalidException extends BusinessException {
 
   public static final String ERROR_CODE = "LOCATION_IDENTIFIER_INVALID";

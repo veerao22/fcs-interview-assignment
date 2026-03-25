@@ -5,16 +5,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
 import java.math.BigDecimal;
 
 @Entity
 @Cacheable
 public class Product {
 
-  @Id
-  @GeneratedValue
-  public Long id;
+  @Id @GeneratedValue public Long id;
 
   @Column(length = 40, unique = true)
   public String name;
@@ -27,8 +24,7 @@ public class Product {
 
   public int stock;
 
-  public Product() {
-  }
+  public Product() {}
 
   public Product(String name) {
     this.name = name;
