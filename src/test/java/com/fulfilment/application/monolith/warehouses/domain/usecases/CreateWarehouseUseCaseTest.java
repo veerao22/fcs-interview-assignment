@@ -1,6 +1,6 @@
 package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
-import com.fulfilment.application.monolith.warehouses.domain.exceptions.*;
+import com.fulfilment.application.monolith.warehouses.domain.excpetions.*;
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
@@ -36,7 +36,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseSuccessfully() {
     Warehouse warehouse = buildWarehouse("MWH.NEW", "AMSTERDAM-001", 30, 5);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.NEW")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.NEW")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(1L);
@@ -54,7 +54,7 @@ public class CreateWarehouseUseCaseTest {
     Warehouse warehouse = buildWarehouse("MWH.001", "AMSTERDAM-001", 30, 5);
     Warehouse existing = buildWarehouse("MWH.001", "ZWOLLE-001", 100, 10);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(existing);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(existing);
 
     assertThrows(DuplicateBusinessUnitCodeException.class, () -> useCase.create(warehouse));
     verify(warehouseStore, never()).create(Mockito.any());
@@ -64,7 +64,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseThrowsLocationNotFound() {
     Warehouse warehouse = buildWarehouse("MWH.NEW", "INVALID-LOC", 30, 5);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.NEW")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.NEW")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("INVALID-LOC"))
         .thenThrow(new LocationNotFoundException("INVALID-LOC"));
 
@@ -76,7 +76,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseThrowsMaxWarehousesReached() {
     Warehouse warehouse = buildWarehouse("MWH.NEW", "ZWOLLE-001", 30, 5);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.NEW")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.NEW")).thenReturn(null);
     // ZWOLLE-001: maxNumberOfWarehouses=1
     when(locationResolver.resolveByIdentifier("ZWOLLE-001"))
         .thenReturn(new Location("ZWOLLE-001", 1, 40));
@@ -90,7 +90,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseThrowsCapacityExceededForLocation() {
     Warehouse warehouse = buildWarehouse("MWH.NEW", "AMSTERDAM-001", 60, 5);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.NEW")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.NEW")).thenReturn(null);
     // AMSTERDAM-001: maxCapacity=100
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
@@ -106,7 +106,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseThrowsCapacityExceededStockOverCapacity() {
     Warehouse warehouse = buildWarehouse("MWH.NEW", "AMSTERDAM-001", 30, 50);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.NEW")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.NEW")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(0L);
@@ -124,7 +124,7 @@ public class CreateWarehouseUseCaseTest {
     // currentTotal 70 + new 30 = 100 == maxCapacity 100 -> allowed
     Warehouse warehouse = buildWarehouse("MWH.BOUNDARY", "AMSTERDAM-001", 30, 10);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.BOUNDARY")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.BOUNDARY")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(2L);
@@ -141,7 +141,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseSuccessWhenNoWarehousesAtLocationYet() {
     Warehouse warehouse = buildWarehouse("MWH.FIRST", "TILBURG-001", 40, 20);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.FIRST")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.FIRST")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("TILBURG-001"))
         .thenReturn(new Location("TILBURG-001", 1, 40));
     when(warehouseStore.countActiveByLocation("TILBURG-001")).thenReturn(0L);
@@ -159,7 +159,7 @@ public class CreateWarehouseUseCaseTest {
     // count=1, maxNumberOfWarehouses=1 -> no room
     Warehouse warehouse = buildWarehouse("MWH.NEW", "ZWOLLE-001", 10, 5);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.NEW")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.NEW")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("ZWOLLE-001"))
         .thenReturn(new Location("ZWOLLE-001", 1, 40));
     when(warehouseStore.countActiveByLocation("ZWOLLE-001")).thenReturn(1L);
@@ -173,7 +173,7 @@ public class CreateWarehouseUseCaseTest {
     // 50 + 51 = 101 > 100
     Warehouse warehouse = buildWarehouse("MWH.OVER", "AMSTERDAM-001", 51, 10);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.OVER")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.OVER")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(1L);
@@ -187,7 +187,7 @@ public class CreateWarehouseUseCaseTest {
   public void testCreateWarehouseSuccessWhenStockEqualsCapacity() {
     Warehouse warehouse = buildWarehouse("MWH.FULL", "AMSTERDAM-002", 50, 50);
 
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.FULL")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.FULL")).thenReturn(null);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-002"))
         .thenReturn(new Location("AMSTERDAM-002", 3, 75));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-002")).thenReturn(0L);

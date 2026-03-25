@@ -1,6 +1,6 @@
 package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
-import com.fulfilment.application.monolith.warehouses.domain.exceptions.*;
+import com.fulfilment.application.monolith.warehouses.domain.excpetions.*;
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
@@ -85,7 +85,7 @@ public class ReplaceWarehouseUseCaseTest {
   @Test
   void replace_whenCurrentNotFound_throwsWarehouseNotFoundException() {
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 100, 50);
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(null);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(null);
 
     assertThrows(WarehouseNotFoundException.class, () -> useCase.replace(newWh));
     verify(warehouseStore, never()).update(any());
@@ -96,7 +96,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenLocationNotFound_throwsLocationNotFoundException() {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 50);
     Warehouse newWh = warehouse("MWH.001", "UNKNOWN-LOC", 100, 50);
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("UNKNOWN-LOC"))
         .thenThrow(new LocationNotFoundException("UNKNOWN-LOC"));
 
@@ -109,7 +109,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenNewCapacityLessThanOldStock_throwsInsufficientCapacityException() {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 80);
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 50, 80); // capacity 50 < stock 80
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
 
     assertThrows(InsufficientCapacityException.class, () -> useCase.replace(newWh));
     verify(warehouseStore, never()).update(any());
@@ -120,7 +120,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenNewStockDoesNotMatchOldStock_throwsStockMismatchException() {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 50);
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 100, 30); // stock 30 != 50
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(0L);
@@ -136,7 +136,7 @@ public class ReplaceWarehouseUseCaseTest {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 50);
     Warehouse newWh =
         warehouse("MWH.001", "AMSTERDAM-001", 80, 50); // same stock, capacity >= stock
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(1L);
@@ -156,7 +156,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenValid_sameLocation_archivesCurrentAndCreatesNew() {
     Warehouse current = warehouse("MWH.001", "AMSTERDAM-001", 50, 30);
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 60, 30); // same location
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001"))
@@ -175,7 +175,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenSameLocationAndCountExceedsMax_throwsMaxWarehousesReachedException() {
     Warehouse current = warehouse("MWH.001", "AMSTERDAM-001", 50, 30);
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 60, 30);
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 2, 100)); // max 2 warehouses
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001"))
@@ -194,7 +194,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenDifferentLocationAndCountAtMax_throwsMaxWarehousesReachedException() {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 50);
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 80, 50);
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 2, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(2L); // >= 2, no room
@@ -211,7 +211,7 @@ public class ReplaceWarehouseUseCaseTest {
     Warehouse current = warehouse("MWH.001", "AMSTERDAM-001", 20, 10);
     Warehouse newWh =
         warehouse("MWH.001", "AMSTERDAM-001", 90, 10); // 20 - 20 + 90 = 90, but max 50
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 50));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(1L);
@@ -229,7 +229,7 @@ public class ReplaceWarehouseUseCaseTest {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 50);
     Warehouse newWh =
         warehouse("MWH.001", "AMSTERDAM-001", 60, 50); // existing cap 50, 50+60=110 > 100
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(1L);
@@ -253,7 +253,7 @@ public class ReplaceWarehouseUseCaseTest {
   void replace_whenNewStockEqualsNewCapacity_passesStockCapacityCheck() {
     Warehouse current = warehouse("MWH.001", "ZWOLLE-001", 100, 50);
     Warehouse newWh = warehouse("MWH.001", "AMSTERDAM-001", 50, 50); // stock == capacity
-    when(warehouseStore.findActiveByBusinessUnitCode("MWH.001")).thenReturn(current);
+    when(warehouseStore.findByBusinessUnitCode("MWH.001")).thenReturn(current);
     when(locationResolver.resolveByIdentifier("AMSTERDAM-001"))
         .thenReturn(new Location("AMSTERDAM-001", 5, 100));
     when(warehouseStore.countActiveByLocation("AMSTERDAM-001")).thenReturn(0L);

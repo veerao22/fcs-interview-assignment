@@ -1,6 +1,6 @@
 package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
-import com.fulfilment.application.monolith.warehouses.domain.exceptions.WarehouseNotFoundException;
+import com.fulfilment.application.monolith.warehouses.domain.excpetions.WarehouseNotFoundException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import io.quarkus.test.InjectMock;
