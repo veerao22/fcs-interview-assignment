@@ -1,0 +1,48 @@
+# Build output
+target/
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# IDE - Eclipse
+.project
+.classpath
+.settings/
+
+# IDE - VS Code
+.vscode/
+
+# IDE - NetBeans
+nbproject/
+nbbuild/
+nbdist/
+nb-configuration.xml
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Package files
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+*.war
+*.ear
+
+# Quarkus
+.quarkus/
+
+# Environment/secrets
+.env
+*.env.local
+
+# Test output
+test-output/
+
+.claude
+.idea
