@@ -1,6 +1,5 @@
 package com.fulfilment.application.monolith.fulfilment;
 
-
 import com.fulfilment.application.monolith.exceptions.BusinessException;
 
 public class FulfilmentConstraintException extends BusinessException {

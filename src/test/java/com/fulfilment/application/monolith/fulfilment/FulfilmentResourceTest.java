@@ -1,12 +1,12 @@
 package com.fulfilment.application.monolith.fulfilment;
 
+import static io.restassured.RestAssured.given;
+
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static io.restassured.RestAssured.given;
 
 /**
  * REST API tests for fulfilment. Constraint validation (max 2 wh/product/store, max 3 wh/store, max

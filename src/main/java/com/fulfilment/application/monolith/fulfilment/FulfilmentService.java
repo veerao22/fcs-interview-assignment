@@ -8,9 +8,8 @@ import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.jboss.logging.Logger;
-
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class FulfilmentService {

@@ -7,7 +7,6 @@ import com.fulfilment.application.monolith.warehouses.adapters.database.Warehous
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
 import java.time.LocalDateTime;
 
 /** Helper to create test data inside a transaction (for use from @QuarkusTest). */
